@@ -35,6 +35,7 @@ function App() {
                                 <Route path="/profile" element={<Profile />} />
                             </Route>
                         </Route>
+                        <Route path="*" element={<div style={{ padding: 20 }}>Page not found (404)</div>} />
                     </Routes>
                 </WebSocketProvider>
             </AuthProvider>

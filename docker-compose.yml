@@ -1,17 +1,26 @@
 services:
   backend:
     build: ./backend
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/uploads:/app/uploads
-      - ./backend/task_management.db:/app/task_management.db
+      - ./backend:/app
     environment:
       - SECRET_KEY=your_secret_key_here
+      # If you want to use Postgres in Docker later, uncomment this:
+      # - DATABASE_URL=postgresql://user:password@db/dbname
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     ports:
-      - "3000:80"
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # Prevent host node_modules from overwriting container's
+    environment:
+      - VITE_API_URL=http://localhost:8000 # Browser runs on host, so use localhost
     depends_on:
       - backend

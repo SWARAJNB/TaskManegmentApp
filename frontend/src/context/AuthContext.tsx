@@ -35,7 +35,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            fetchUser().finally(() => setLoading(false));
+            fetchUser()
+                .catch(err => {
+                    console.error("Auth initialization failed:", err);
+                    localStorage.removeItem('token');
+                    setUser(null);
+                })
+                .finally(() => setLoading(false));
         } else {
             setLoading(false);
         }

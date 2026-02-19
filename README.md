@@ -23,7 +23,7 @@ TaskFlow is a modern, full-stack task management application designed to help us
 
 ### Backend
 - **Framework**: FastAPI (Python)
-- **Database**: SQLite (with SQLAlchemy ORM)
+- **Database**: PostgreSQL (Production) / SQLite (Dev) (with SQLAlchemy ORM)
 - **Authentication**: OAuth2 with Password Flow (JWT)
 - **Validation**: Pydantic models
 
@@ -84,14 +84,18 @@ The application will be running at `http://localhost:5173`.
 
 ---
 
-### Option 3: Docker (Bonus)
-If you have Docker installed, you can run the entire stack with a single command:
+### Option 3: Docker Live Run (Recommended)
+Run the entire stack with hot-reloading enabled for both frontend and backend:
 
 ```bash
 docker-compose up --build
 ```
-- Frontend: `http://localhost:3000`
-- Backend: `http://localhost:8000`
+- **Frontend**: `http://localhost:5173` (Edits to source code reflect instantly)
+- **Backend**: `http://localhost:8000` (Edits to python files reflect instantly)
+
+### Configuration
+- **Backend**: Create a `.env` file in `backend/` to set `DATABASE_URL` for PostgreSQL. Defaults to SQLite.
+- **Frontend**: Create a `.env` file in `frontend/` to set `VITE_API_URL` if the backend is hosted elsewhere. Defaults to `http://localhost:8000`.
 
 ---
 
