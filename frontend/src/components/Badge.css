@@ -1,0 +1,14 @@
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-flex;
+    align-items: center;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+}
+
+/* Status variants handled via inline styles for dynamic colors in component, 
+   but base classes could be added here if we move away from dynamic mapping */

@@ -1,0 +1,52 @@
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background-color: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    animation: scaleUp 0.5s ease-out both;
+    position: relative;
+    overflow: hidden;
+}
+
+.empty-state-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, var(--primary-light) 0%, transparent 70%);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.empty-state-icon-wrapper {
+    background: linear-gradient(135deg, var(--primary-light), var(--background));
+    padding: 1.25rem;
+    border-radius: 50%;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: float 3s ease-in-out infinite;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+}
+
+.empty-state-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.empty-state-description {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    max-width: 400px;
+    line-height: 1.6;
+}

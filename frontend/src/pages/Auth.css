@@ -1,0 +1,314 @@
+/* 3D Login Styles */
+.auth-3d-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000000;
+    perspective: 1000px;
+    overflow: hidden;
+    color: white;
+}
+
+.auth-3d-card {
+    width: 900px;
+    min-height: 550px;
+    height: auto;
+    padding-bottom: 2rem;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2),
+        inset 0 0 20px rgba(0, 243, 255, 0.05);
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out;
+    /* Smooth follow */
+}
+
+/* Glowing Border Effect */
+.auth-3d-card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 22px;
+    background: linear-gradient(45deg, #00f3ff, transparent, #00f3ff);
+    z-index: -1;
+    opacity: 0.5;
+    filter: blur(10px);
+}
+
+.auth-3d-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    /* Inner dark bg */
+}
+
+/* Left Side - Form */
+.auth-3d-form-section {
+    flex: 1;
+    padding: 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+}
+
+.auth-3d-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    letter-spacing: 1px;
+}
+
+.auth-3d-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.auth-3d-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.auth-3d-input-group label {
+    font-size: 0.9rem;
+    color: #a0a0a0;
+    margin-left: 0.2rem;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.auth-3d-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #333;
+    padding: 0.8rem 0;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    padding-right: 2rem;
+}
+
+.auth-3d-input:focus {
+    outline: none;
+    border-bottom-color: var(--neon-cyan);
+    box-shadow: 0 10px 10px -10px rgba(0, 243, 255, 0.2);
+}
+
+.auth-3d-icon {
+    position: absolute;
+    right: 0;
+    color: #666;
+    transition: color 0.3s;
+}
+
+.auth-3d-input:focus+.auth-3d-icon {
+    color: var(--neon-cyan);
+}
+
+.auth-3d-btn {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: linear-gradient(90deg, rgba(0, 243, 255, 0.8), rgba(0, 183, 255, 0.8));
+    border: none;
+    border-radius: 30px;
+    color: #000;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.auth-3d-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
+}
+
+.auth-3d-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.auth-3d-link {
+    color: var(--neon-cyan);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 0.3rem;
+    transition: text-shadow 0.3s;
+}
+
+.auth-3d-link:hover {
+    text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+}
+
+.auth-error-text {
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 5px rgba(255, 77, 77, 0.3);
+}
+
+/* Right Side - Welcome */
+.auth-3d-welcome-section {
+    flex: 0.8;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #001a1d, #000);
+    overflow: hidden;
+}
+
+/* Diagonal Separator */
+.auth-3d-welcome-section::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);
+    transform: skewX(-15deg) translateX(-50%);
+    z-index: 1;
+}
+
+.diagonal-shape {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 45%, rgba(0, 243, 255, 0.03) 50%, transparent 55%);
+    animation: shine 8s infinite linear;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateY(-20%) translateX(-20%) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(20%) translateX(20%) rotate(360deg);
+    }
+}
+
+.welcome-content {
+    text-align: right;
+    z-index: 2;
+    padding-right: 2rem;
+}
+
+.welcome-content h2 {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    background: linear-gradient(to right, #fff, #aaa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+
+/* Eye Button & Forgot Logic */
+.auth-3d-eye-btn {
+    position: absolute;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+}
+
+.auth-3d-eye-btn:hover {
+    color: var(--neon-cyan);
+}
+
+.auth-3d-forgot-btn {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    text-decoration: underline;
+}
+
+.auth-3d-forgot-btn:hover {
+    color: var(--neon-cyan);
+}
+
+.auth-3d-btn-secondary {
+    padding: 0.8rem;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.auth-3d-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #fff !important;
+}
+
+/* Response Message */
+.auth-error-text.success {
+    color: #00f3ff;
+    text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .auth-3d-card {
+        width: 90%;
+        height: auto;
+        min-height: 600px;
+        flex-direction: column;
+    }
+
+    .auth-3d-content {
+        flex-direction: column-reverse;
+    }
+
+    .auth-3d-welcome-section {
+        flex: 0.4;
+        padding: 2rem;
+    }
+
+    .auth-3d-form-section {
+        padding: 2rem;
+    }
+
+    .welcome-content h2 {
+        font-size: 2.5rem;
+        text-align: center;
+    }
+}
