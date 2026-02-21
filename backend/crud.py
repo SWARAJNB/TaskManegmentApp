@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import extract, cast, Date
 import models, schemas
 from auth import get_password_hash
 
@@ -159,7 +160,7 @@ def get_task_stats(db: Session, user_id: int, period: str = "week"):
     while True:
         day_count = db.query(models.Task).filter(
             models.Task.owner_id == user_id,
-            func.date(models.Task.created_at) == str(check_date)
+            cast(models.Task.created_at, Date) == check_date
         ).count()
         if day_count > 0:
             current_streak += 1
@@ -171,17 +172,17 @@ def get_task_stats(db: Session, user_id: int, period: str = "week"):
         start_time = datetime.utcnow() - timedelta(hours=23)
         
         daily_counts = db.query(
-            func.strftime('%H', models.Task.created_at).label('hour'),
+            extract('hour', models.Task.created_at).label('hour'),
             func.count(models.Task.id).label('count'),
             func.coalesce(func.sum(models.Task.time_spent), 0).label('hours')
         ).filter(
             models.Task.owner_id == user_id,
             models.Task.created_at >= start_time
         ).group_by(
-            func.strftime('%H', models.Task.created_at)
+            extract('hour', models.Task.created_at)
         ).all()
         
-        activity_map = {row.hour: {"count": row.count, "hours": round(float(row.hours), 1)} for row in daily_counts}
+        activity_map = {str(int(row.hour)).zfill(2): {"count": row.count, "hours": round(float(row.hours), 1)} for row in daily_counts}
         daily_activity = []
         now = datetime.utcnow()
         for i in range(24):
@@ -199,14 +200,14 @@ def get_task_stats(db: Session, user_id: int, period: str = "week"):
         start_date = today - timedelta(days=num_days-1)
         
         daily_counts = db.query(
-            func.date(models.Task.created_at).label('date'),
+            cast(models.Task.created_at, Date).label('date'),
             func.count(models.Task.id).label('count'),
             func.coalesce(func.sum(models.Task.time_spent), 0).label('hours')
         ).filter(
             models.Task.owner_id == user_id,
             models.Task.created_at >= start_date
         ).group_by(
-            func.date(models.Task.created_at)
+            cast(models.Task.created_at, Date)
         ).all()
         
         activity_map = {str(day.date): {"count": day.count, "hours": round(float(day.hours), 1)} for day in daily_counts}
@@ -225,14 +226,14 @@ def get_task_stats(db: Session, user_id: int, period: str = "week"):
         start_date = today - timedelta(days=num_days-1)
         
         daily_counts = db.query(
-            func.date(models.Task.created_at).label('date'),
+            cast(models.Task.created_at, Date).label('date'),
             func.count(models.Task.id).label('count'),
             func.coalesce(func.sum(models.Task.time_spent), 0).label('hours')
         ).filter(
             models.Task.owner_id == user_id,
             models.Task.created_at >= start_date
         ).group_by(
-            func.date(models.Task.created_at)
+            cast(models.Task.created_at, Date)
         ).all()
         
         activity_map = {str(day.date): {"count": day.count, "hours": round(float(day.hours), 1)} for day in daily_counts}

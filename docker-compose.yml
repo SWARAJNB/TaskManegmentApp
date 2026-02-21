@@ -1,4 +1,15 @@
 services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: taskflow
+      POSTGRES_PASSWORD: taskflow_pass
+      POSTGRES_DB: taskflow_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   backend:
     build: ./backend
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
@@ -7,9 +18,11 @@ services:
     volumes:
       - ./backend:/app
     environment:
+      - DATABASE_URL=postgresql://taskflow:taskflow_pass@db:5432/taskflow_db
       - SECRET_KEY=your_secret_key_here
-      # If you want to use Postgres in Docker later, uncomment this:
-      # - DATABASE_URL=postgresql://user:password@db/dbname
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+    depends_on:
+      - db
 
   frontend:
     build:
@@ -24,3 +37,6 @@ services:
       - VITE_API_URL=http://localhost:8000 # Browser runs on host, so use localhost
     depends_on:
       - backend
+
+volumes:
+  pgdata:

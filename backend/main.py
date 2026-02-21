@@ -59,15 +59,14 @@ _run_migrations()
 
 app = FastAPI(title="Task Management System")
 
-# CORS configuration
-origins = [
-    "http://localhost:5173",  # React default port
-    "http://localhost:3000",
-]
+# CORS configuration — reads from CORS_ORIGINS env var (comma-separated) with local dev defaults
+import os as _os
+_default_origins = "http://localhost:5173,http://localhost:3000"
+_cors_origins = _os.environ.get("CORS_ORIGINS", _default_origins).split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow all origins for development convenience
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
