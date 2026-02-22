@@ -2,58 +2,19 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
-import { UserPlus, Mail, Lock, User, AlertCircle, ArrowRight, Phone, MessageSquare, CheckCircle } from 'lucide-react';
+import { Mail, Lock, User, Phone } from 'lucide-react';
 import './Auth.css';
 
 const Register = () => {
 
-    // ...
-
     const [email, setEmail] = useState('');
     const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
+    const [mobile, setMobile] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    // Mobile & OTP States
-    const [mobile, setMobile] = useState('');
-    const [otp, setOtp] = useState('');
-    const [otpState, setOtpState] = useState<'idle' | 'sending' | 'sent' | 'verified'>('idle');
-    const [generatedOtp, setGeneratedOtp] = useState(''); // In real app, verify on backend
-
     const navigate = useNavigate();
-
-    const handleSendOtp = async () => {
-        if (!mobile || mobile.length < 10) {
-            setError('Please enter a valid mobile number');
-            return;
-        }
-        try {
-            setOtpState('sending');
-            const res = await api.post('/auth/send-otp', { mobile_number: mobile });
-            // For demo purposes, we log the OTP. In prod, backend handles verification.
-            console.log("OTP Sent:", res.data.dev_otp);
-            setGeneratedOtp(res.data.dev_otp);
-            setOtpState('sent');
-            setError('');
-        } catch (err) {
-            setOtpState('idle');
-            setError('Failed to send OTP. Try again.');
-        }
-    };
-
-    const handleVerifyOtp = async () => {
-        if (!otp) return;
-        // In real app: await api.post('/auth/verify-otp', { mobile, otp })
-        // For demo:
-        if (otp === generatedOtp || otp === '123456') {
-            setOtpState('verified');
-            setError('');
-        } else {
-            setError('Invalid OTP');
-        }
-    };
-
     const { login } = useAuth();
 
     // Refs for 3D tilt effect
@@ -67,7 +28,6 @@ const Register = () => {
             const { clientX, clientY } = e;
             const { innerWidth, innerHeight } = window;
 
-            // Calculate rotation
             const xRotation = ((clientY - innerHeight / 2) / innerHeight) * 20;
             const yRotation = ((clientX - innerWidth / 2) / innerWidth) * 20;
 
@@ -92,8 +52,9 @@ const Register = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+
         if (!fullName || !email || !password) {
-            setError('Please fill in all fields');
+            setError('Please fill in all required fields');
             return;
         }
         if (password.length < 3) {
@@ -103,8 +64,13 @@ const Register = () => {
 
         setIsLoading(true);
         try {
-            // 1. Create User
-            await api.post('/users/', { email, full_name: fullName, password });
+            // 1. Create User (with optional mobile number)
+            await api.post('/users/', {
+                email,
+                full_name: fullName,
+                password,
+                mobile_number: mobile || null,
+            });
 
             // 2. Auto Login
             const params = new URLSearchParams();
@@ -124,10 +90,10 @@ const Register = () => {
                 navigate('/login');
             }
         } catch (err: any) {
-            console.error("Registration error:", err);
+            console.error('Registration error:', err);
             if (err.response) {
                 const detail = err.response.data.detail || JSON.stringify(err.response.data);
-                if (err.response.status === 400 && detail.includes("already registered")) {
+                if (err.response.status === 400 && detail.includes('already registered')) {
                     setError('Email already exists. Please sign in.');
                 } else {
                     setError(`Registration failed: ${detail}`);
@@ -151,8 +117,9 @@ const Register = () => {
                         {error && <div className="auth-error-text">{error}</div>}
 
                         <form onSubmit={handleSubmit} className="auth-3d-form">
+                            {/* Full Name */}
                             <div className="auth-3d-input-group">
-                                <label>Full Name</label>
+                                <label>Full Name <span style={{ color: '#ff4d4d' }}>*</span></label>
                                 <div className="input-wrapper">
                                     <input
                                         type="text"
@@ -160,64 +127,30 @@ const Register = () => {
                                         onChange={(e) => setFullName(e.target.value)}
                                         required
                                         className="auth-3d-input"
+                                        placeholder="Enter your full name"
                                     />
                                     <User size={18} className="auth-3d-icon" />
                                 </div>
                             </div>
 
+                            {/* Mobile Number */}
                             <div className="auth-3d-input-group">
-                                <label>Mobile Number</label>
+                                <label>Mobile Number <span style={{ color: '#aaa', fontSize: '0.8rem' }}>(optional)</span></label>
                                 <div className="input-wrapper">
                                     <input
                                         type="tel"
                                         value={mobile}
                                         onChange={(e) => setMobile(e.target.value)}
-                                        required
                                         className="auth-3d-input"
-                                        placeholder="Mobile Number"
+                                        placeholder="e.g. +91 98765 43210"
                                     />
-                                    {otpState === 'verified' ? (
-                                        <CheckCircle size={18} className="auth-3d-icon" style={{ color: '#00f3ff' }} />
-                                    ) : (
-                                        <button
-                                            type="button"
-                                            onClick={handleSendOtp}
-                                            disabled={otpState === 'sending'}
-                                            className="auth-3d-verify-btn"
-                                            style={{ right: '0.5rem', position: 'absolute', padding: '0.2rem 0.5rem', background: 'rgba(0, 243, 255, 0.2)', border: '1px solid #00f3ff', color: '#fff', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', zIndex: 10 }}
-                                        >
-                                            {otpState === 'sending' ? 'Sending...' : otpState === 'sent' ? 'Resend' : 'Verify'}
-                                        </button>
-                                    )}
+                                    <Phone size={18} className="auth-3d-icon" />
                                 </div>
                             </div>
 
-                            {otpState === 'sent' && (
-                                <div className="auth-3d-input-group fade-in">
-                                    <label>Enter OTP</label>
-                                    <div className="input-wrapper">
-                                        <input
-                                            type="text"
-                                            value={otp}
-                                            onChange={(e) => setOtp(e.target.value)}
-                                            className="auth-3d-input"
-                                            placeholder="Enter 6-digit OTP"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={handleVerifyOtp}
-                                            className="auth-3d-verify-btn"
-                                            style={{ right: '0.5rem', position: 'absolute', padding: '0.2rem 0.5rem', background: '#00f3ff', border: 'none', color: '#000', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', zIndex: 10 }}
-                                        >
-                                            Confirm
-                                        </button>
-                                    </div>
-                                    <p style={{ fontSize: '0.8rem', color: '#aaa', marginTop: '0.2rem' }}>Check console for OTP (Demo)</p>
-                                </div>
-                            )}
-
+                            {/* Email Address */}
                             <div className="auth-3d-input-group">
-                                <label>Email Address</label>
+                                <label>Email Address <span style={{ color: '#ff4d4d' }}>*</span></label>
                                 <div className="input-wrapper">
                                     <input
                                         type="email"
@@ -225,13 +158,15 @@ const Register = () => {
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
                                         className="auth-3d-input"
+                                        placeholder="Enter your email"
                                     />
                                     <Mail size={18} className="auth-3d-icon" />
                                 </div>
                             </div>
 
+                            {/* Password */}
                             <div className="auth-3d-input-group">
-                                <label>Password</label>
+                                <label>Password <span style={{ color: '#ff4d4d' }}>*</span></label>
                                 <div className="input-wrapper">
                                     <input
                                         type="password"
@@ -239,6 +174,7 @@ const Register = () => {
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                         className="auth-3d-input"
+                                        placeholder="Min. 3 characters"
                                     />
                                     <Lock size={18} className="auth-3d-icon" />
                                 </div>
@@ -246,9 +182,8 @@ const Register = () => {
 
                             <button
                                 type="submit"
-                                disabled={isLoading || otpState !== 'verified'}
+                                disabled={isLoading}
                                 className="auth-3d-btn"
-                                style={{ opacity: otpState !== 'verified' ? 0.7 : 1, cursor: otpState !== 'verified' ? 'not-allowed' : 'pointer' }}
                             >
                                 {isLoading ? 'Creating...' : 'Register'}
                             </button>
