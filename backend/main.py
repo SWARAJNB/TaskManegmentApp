@@ -61,8 +61,13 @@ app = FastAPI(title="Task Management System")
 
 # CORS configuration — reads from CORS_ORIGINS env var (comma-separated) with local dev defaults
 import os as _os
-_default_origins = "http://localhost:5173,http://localhost:3000"
-_cors_origins = _os.environ.get("CORS_ORIGINS", _default_origins).split(",")
+_default_origins = (
+    "http://localhost:5173,"
+    "http://localhost:3000,"
+    "https://taskmanagement-frontend-6p1k.onrender.com"
+)
+_cors_env = _os.environ.get("CORS_ORIGINS", _default_origins)
+_cors_origins = [origin.strip() for origin in _cors_env.split(",") if origin.strip()]
 
 app.add_middleware(
     CORSMiddleware,
