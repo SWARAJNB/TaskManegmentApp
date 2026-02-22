@@ -7,6 +7,7 @@
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Click_Here-00C853?style=for-the-badge)](https://taskmanagement-frontend-6p1k.onrender.com)
 [![API Docs](https://img.shields.io/badge/📄_API_Docs-Swagger_UI-FF6F00?style=for-the-badge)](https://taskmanegmentapp.onrender.com/docs)
 [![GitHub](https://img.shields.io/badge/📂_Source_Code-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/SWARAJNB/TaskManegmentApp)
+[![YouTube Demo](https://img.shields.io/badge/🎬_Demo_Video-YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/qxLd5YPzum0)
 
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?logo=fastapi&logoColor=white)
@@ -37,6 +38,7 @@
 - [Environment Variables](#-environment-variables)
 - [Screenshots](#-screenshots)
 - [Development Process](#-development-process)
+- [Demo Video](#-demo-video)
 - [License](#-license)
 
 ---
@@ -46,6 +48,20 @@
 **TaskFlow** is a complete, production-grade task management system designed to help individuals and teams organize, track, and manage their tasks efficiently. It features a modern **3D animated UI**, real-time updates via **WebSocket**, comprehensive **analytics dashboard**, and secure **JWT authentication** — all deployed on the cloud.
 
 This project demonstrates **end-to-end full-stack development**, from database design and RESTful API creation to responsive frontend implementation and cloud deployment.
+
+---
+
+## 🎬 Demo Video
+
+<div align="center">
+
+[![Watch the Demo](https://img.youtube.com/vi/qxLd5YPzum0/maxresdefault.jpg)](https://youtu.be/qxLd5YPzum0)
+
+**👆 Click the image above to watch the full project walkthrough on YouTube**
+
+🔗 **Direct Link:** [https://youtu.be/qxLd5YPzum0](https://youtu.be/qxLd5YPzum0)
+
+</div>
 
 ---
 
