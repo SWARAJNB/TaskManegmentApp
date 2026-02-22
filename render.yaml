@@ -20,7 +20,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://taskmanagement-frontend-6p1k.onrender.com,https://taskmanagmentapp.onrender.com
+        value: https://taskmanagement-frontend-6p1k.onrender.com
       - key: PYTHON_VERSION
         value: "3.11"
 
@@ -33,7 +33,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: https://taskmanagmentapp.onrender.com
+        value: https://taskmanegmentapp.onrender.com
     routes:
       - type: rewrite
         source: /*
