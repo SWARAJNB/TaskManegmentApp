@@ -84,7 +84,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
-                        def awsRegion = "YOUR_AWS_REGION"
+                        def awsRegion = "us-east-1"
                         def awsAccountId = "152537192875"
                         
                         echo 'Logging in to AWS ECR...'
@@ -122,7 +122,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
-                        def awsRegion = "YOUR_AWS_REGION"
+                        def awsRegion = "us-east-1"
                         echo 'Registering task definition and updating services...'
                         if (isUnix()) {
                             sh "aws ecs register-task-definition --cli-input-json file://task-definition.json --region ${awsRegion}"
