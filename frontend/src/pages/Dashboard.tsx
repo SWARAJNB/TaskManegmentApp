@@ -182,6 +182,20 @@ const Dashboard = () => {
                     <p className="dashboard-subtitle-modern">Here's what's happening with your projects today.</p>
                 </div>
                 <div className="header-actions">
+                    <span className="ci-badge" style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        color: '#22c55e',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '999px',
+                        fontSize: '0.85rem',
+                        fontWeight: '600',
+                        border: '1px solid rgba(34, 197, 94, 0.2)'
+                    }}>
+                        <Activity size={14} /> CI/CD: Connected
+                    </span>
                     <span className="date-badge"><Calendar size={14} /> {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</span>
                     <button onClick={handleExport} className="export-btn">Export CSV</button>
                     <button onClick={() => setIsTaskFormOpen(true)} className="create-task-btn">+ New Task</button>
