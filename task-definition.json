@@ -4,11 +4,11 @@
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "512",
   "memory": "1024",
-  "executionRoleArn": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::152537192875:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "name": "backend",
-      "image": "YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/taskflow-backend:latest",
+      "image": "152537192875.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/taskflow-backend:latest",
       "portMappings": [
         {
           "containerPort": 8000,
@@ -28,7 +28,7 @@
     },
     {
       "name": "frontend",
-      "image": "YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/taskflow-frontend:latest",
+      "image": "152537192875.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/taskflow-frontend:latest",
       "portMappings": [
         {
           "containerPort": 80,
