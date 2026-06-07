@@ -79,6 +79,64 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Build & Push to AWS ECR') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    script {
+                        def awsRegion = "YOUR_AWS_REGION"
+                        def awsAccountId = "YOUR_AWS_ACCOUNT_ID"
+                        
+                        echo 'Logging in to AWS ECR...'
+                        if (isUnix()) {
+                            sh "aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com"
+                            
+                            echo 'Building & Pushing Backend Image...'
+                            sh "docker build -t taskflow-backend ./backend"
+                            sh "docker tag taskflow-backend:latest ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/taskflow-backend:latest"
+                            sh "docker push ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/taskflow-backend:latest"
+                            
+                            echo 'Building & Pushing Frontend Image...'
+                            sh "docker build -t taskflow-frontend ./frontend"
+                            sh "docker tag taskflow-frontend:latest ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/taskflow-frontend:latest"
+                            sh "docker push ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/taskflow-frontend:latest"
+                        } else {
+                            bat "aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com"
+                            
+                            echo 'Building & Pushing Backend Image...'
+                            bat "docker build -t taskflow-backend ./backend"
+                            bat "docker tag taskflow-backend:latest ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/taskflow-backend:latest"
+                            bat "docker push ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/taskflow-backend:latest"
+                            
+                            echo 'Building & Pushing Frontend Image...'
+                            bat "docker build -t taskflow-frontend ./frontend"
+                            bat "docker tag taskflow-frontend:latest ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/taskflow-frontend:latest"
+                            bat "docker push ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/taskflow-frontend:latest"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to AWS ECS') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    script {
+                        def awsRegion = "YOUR_AWS_REGION"
+                        echo 'Registering task definition and updating services...'
+                        if (isUnix()) {
+                            sh "aws ecs register-task-definition --cli-input-json file://task-definition.json --region ${awsRegion}"
+                            sh "aws ecs update-service --cluster taskflow-cluster --service taskflow-backend-service --task-definition taskflow-app --region ${awsRegion}"
+                            sh "aws ecs update-service --cluster taskflow-cluster --service taskflow-frontend-service --task-definition taskflow-app --region ${awsRegion}"
+                        } else {
+                            bat "aws ecs register-task-definition --cli-input-json file://task-definition.json --region ${awsRegion}"
+                            bat "aws ecs update-service --cluster taskflow-cluster --service taskflow-backend-service --task-definition taskflow-app --region ${awsRegion}"
+                            bat "aws ecs update-service --cluster taskflow-cluster --service taskflow-frontend-service --task-definition taskflow-app --region ${awsRegion}"
+                        }
+                    }
+                }
+            }
+        }
     }
 
     post {
