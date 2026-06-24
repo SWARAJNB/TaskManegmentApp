@@ -45,7 +45,11 @@ sqlite_conn = sqlite3.connect(SQLITE_PATH)
 sqlite_conn.row_factory = sqlite3.Row
 sqlite_cur = sqlite_conn.cursor()
 
-pg_engine = create_engine(POSTGRES_URL)
+connect_args = {}
+if "render.com" in POSTGRES_URL:
+    connect_args["sslmode"] = "require"
+
+pg_engine = create_engine(POSTGRES_URL, connect_args=connect_args)
 
 # Import models so Base.metadata knows about all tables
 import models  # noqa: E402
